@@ -1,0 +1,13 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "urlFilter": "/api2/workflow/instance/list",
+            "resourceTypes": ["xmlhttprequest"]
+        }
+    }
+]

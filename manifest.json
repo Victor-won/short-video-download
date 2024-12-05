@@ -1,0 +1,12 @@
+{
+    "manifest_version": 3,
+    "name": "SVD",
+    "version": "1.0",
+    "description": "Collects and displays all /api2/workflow/instance/list requests.",
+    "permissions": ["activeTab", "webRequest", "declarativeNetRequest"],
+    "host_permissions": ["<all_urls>"],
+    "devtools_page": "devtools.html",
+    "background": {
+        "service_worker": "background.js"
+    }
+}
