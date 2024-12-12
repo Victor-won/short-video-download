@@ -1,38 +1,75 @@
-const port = chrome.runtime.connect({ name: 'SVD' });
-const requestList = document.getElementById('request-list');
-const requestDetail = document.getElementById('request-detail');
+const videoList = document.getElementById('video-list');
 
-let requestStore = []; // 存储所有捕获的数据
+function renderResources(item) {
+    const cardEl = document.createElement('div');
+    cardEl.classList.add('video-card');
+    cardEl.dataset.download = item.url;
+    cardEl.innerHTML = `<div class="video-cover">
+        <img src="${item.cover}" alt="${item.title}">
+    </div>
+    <div class="video-info">
+        <h3>${item.title}</h3>
+        <p>${item.desc}</p>
+    </div>`;
+    videoList.appendChild(cardEl);
+}
 
-// 接收来自 background.js 的消息
-port.onMessage.addListener((message) => {
-    if (message.type === 'requestResponse') {
-        const requestData = message.data.request;
-        const responseData = message.data.response;
-
-        // 存储到请求列表
-        requestStore.push({ requestData, responseData });
-
-        // 更新列表
-        const requestItem = document.createElement('div');
-        requestItem.className = 'request-item';
-        requestItem.textContent = `[${requestData.method || 'GET'}] ${requestData.url}`;
-        requestList.appendChild(requestItem);
-
-        // 点击显示详细信息
-        requestItem.addEventListener('click', () => {
-            const details = `
-### Request
-URL: ${requestData.url}
-Method: ${requestData.method || 'GET'}
-Timestamp: ${new Date(requestData.timeStamp).toLocaleString()}
-Request Body: ${JSON.stringify(JSON.parse(requestData.requestBody) || {}, null, 2)}
-
-### Response
-Status Code: ${responseData.statusCode || 'Unknown'}
-Timestamp: ${new Date(responseData.timeStamp).toLocaleString()}
-`;
-            requestDetail.textContent = details;
-        });
+function getParentNode(el, className) {
+    while (el && el.parentNode) {
+        el = el.parentNode;
+        if (el && el.classList && el.classList.contains(className)) {
+            return el;
+        }
     }
+    return null;
+}
+
+videoList.addEventListener(
+    'click',
+    function (e) {
+        const target = getParentNode(e.target, 'video-card');
+
+        if (target) {
+            const downloadUrl = target.dataset.download;
+            console.log("downloadUrl, " + downloadUrl);
+            chrome.runtime.sendMessage({ type: "download", url: downloadUrl });
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+    },
+    false
+);
+
+videoList.innerHTML = '';
+
+chrome.devtools.network.onRequestFinished.addListener(function (res) {
+    const requestUrl = res.request.url;
+
+    if (requestUrl.indexOf('/aweme/v1/web/aweme/post') === -1) return;
+
+    res.getContent(function (content) {
+        if (!content) return;
+
+        try {
+            const videoList = JSON.parse(content);
+            ((videoList && videoList.aweme_list) || []).forEach((resource) => {
+                if (resource.media_type === 4) {
+                    const videoLen = resource.video.play_addr.url_list.length;
+                    renderResources({
+                        title: resource.item_title,
+                        desc: resource.desc,
+                        resId: resource.aweme_id,
+                        cover: resource.video.cover.url_list[0],
+                        width: resource.video.width,
+                        height: resource.video.height,
+                        url: resource.video.play_addr.url_list[videoLen - 1],
+                    });
+                }
+            });
+        } catch (error) {
+            console.error('Invalid JSON', error);
+            return;
+        }
+    });
 });

@@ -1,76 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>API Request Monitor</title>
-        <style>
-            html,body {
-                height: 100%;
-                overflow: hidden;
-            }
-            body {
-                margin: 0;
-            }
-            #request-list {
-                overflow: auto;
-                height: 100%;
-                box-sizing: border-box;
-                border-bottom: 1px solid #ccc;
-            }
-            .request-item {
-                margin-bottom: 5px;
-                padding: 5px;
-                cursor: pointer;
-                border-bottom: 1px solid #ddd;
-            }
-            .request-item:hover {
-                background-color: #f5f5f5;
-            }
-            #request-detail {
-                height: 100%;
-                box-sizing: border-box;
-                margin: 0;
-                padding: 10px;
-                border: 1px solid #ccc;
-                background: #fafafa;
-                overflow: auto;
-            }
-            .container {
-                display: flex;
-                flex-direction: row;
-                height: 100%;
-            }
+<!doctype html>
+<html style="display: flex">
+  <head>
+    <meta charset="utf8" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-            .fetch-list {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-                overflow: hidden;
-                width: 50%;
-            }
+      html,body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        background-color: #161823;
+      }
+      #video-list {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        color: #fff;
+        padding: 15px 0 0 15px;
+      }
 
-            .fetch-list h2, .fetch-detail h2 {
-                flex: 0;
-            }
+      .video-card {
+        width: calc(10% - 15px);
+        margin: 0 15px 15px 0;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+      }
 
-            .fetch-detail {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-                overflow: hidden;
-                width: 50%;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="fetch-list">
-                <div id="request-list"></div>
-            </div>
-            <div class="fetch-detail">
-                <pre id="request-detail">Click a request to see details.</pre>
-            </div>
-        </div>
-        <script src="panel.js"></script>
-    </body>
+      .video-card:hover img {
+        filter: brightness(120%);
+      }
+
+      .video-cover {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .video-cover img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+
+      .video-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        text-align: center;
+      }
+
+      .video-info h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="video-list"></div>
+    <script src="panel.js"></script>
+  </body>
 </html>
