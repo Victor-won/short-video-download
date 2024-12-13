@@ -24,6 +24,12 @@ function getParentNode(el, className) {
     return null;
 }
 
+// 去除文件名中特殊的字符
+function sanitizeFilename(filename) {
+    const disallowedChars = /[\/:*?"<>|]/g;
+    return filename.replace(disallowedChars, "_");
+}
+
 videoList.addEventListener(
     'click',
     function (e) {
@@ -31,8 +37,13 @@ videoList.addEventListener(
 
         if (target) {
             const downloadUrl = target.dataset.download;
-            console.log("downloadUrl, " + downloadUrl);
-            chrome.runtime.sendMessage({ type: "download", url: downloadUrl });
+            const name = sanitizeFilename(target.querySelector('.video-info p').innerText);
+            console.log("downloadUrl, ", downloadUrl, name);
+            chrome.runtime.sendMessage({
+                type: "download",
+                url: downloadUrl,
+                name
+            });
         }
 
         e.preventDefault();
