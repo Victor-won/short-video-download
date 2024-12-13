@@ -4,9 +4,16 @@
     "version": "1.0",
     "description": "下载抖音某个用户的的视频",
     "permissions": ["activeTab", "webRequest", "declarativeNetRequest", "downloads"],
-    "host_permissions": ["<all_urls>"],
+    "host_permissions": ["https://www.douyin.com/*"],
     "devtools_page": "devtools.html",
     "background": {
         "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "./icons/icon_20pt@2x.png",
+        "32": "./icons/icon_29pt@2x.png",
+        "48": "./icons/icon_40pt@2x.png",
+        "64": "./icons/icon_60pt@2x.png",
+        "128": "./icons/icon_83.5@2x.png"
     }
 }
