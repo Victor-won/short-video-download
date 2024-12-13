@@ -7,4 +7,4 @@
   <p>short video download 插件获取某用户的所有视频，用户可以单独选择下载某个视频</p>
 </p>
 
-<video src="./video.mp4" />
+<video src="./video.mp4" controls autoplay></video>
